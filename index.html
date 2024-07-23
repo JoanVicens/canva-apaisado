@@ -1,62 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 	<style>
-		body, html {
-				margin: 0;
-				padding: 0;
-				width: 100%;
-				height: 100%;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				overflow: hidden;
+		body,
+		html {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			overflow: hidden;
 		}
+
 		.iframe-container {
-				position: relative;
-				width: 100%;
-				height: 100%;
-				display: flex;
-				justify-content: center;
-				align-items: center;
+			position: relative;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
+
 		iframe {
-				width: 100vw;
-				height: 100vh;
-				border: none;
+			width: 100vw;
+			height: 100vh;
+			border: none;
 		}
-		.portrait {
+
+		body {
+			background-color: #0d1216;
+		}
+
+		@media (orientation: portrait) {
+			.iframe-container {
 				transform: rotate(90deg);
 				transform-origin: center center;
 				width: 100vh;
 				height: 100vw;
+			}
+
+			iframe {
+				width: 100vh;
+				height: 100vw;
+			}
 		}
-</style>
+	</style>
 </head>
+
 <body>
-	<div class="iframe-container">
-		<iframe  id="myIframe" loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
-			src="https:&#x2F;&#x2F;www.canva.com&#x2F;design&#x2F;DAGLy70P3p4&#x2F;qxfbcRXlwo_y9irrrqoo8w&#x2F;view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+	<div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%;
+ padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden;
+ border-radius: 8px; will-change: transform;">
+		<iframe id="canvan-frame" loading="lazy"
+			style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+			src="https:&#x2F;&#x2F;www.canva.com&#x2F;design&#x2F;DAGLy70P3p4&#x2F;qxfbcRXlwo_y9irrrqoo8w&#x2F;view?embed"
+			allowfullscreen="allowfullscreen" allow="fullscreen">
 		</iframe>
 	</div>
 </body>
 <script>
-	function adjustIframeOrientation() {
-			const iframe = document.getElementById('myIframe');
-			if (window.innerHeight > window.innerWidth) {
-					iframe.classList.add('portrait');
+
+	async function makeIframeFullScreen(iframe) {
+		try {
+
+			if (iframe.requestFullscreen) {
+				await iframe.requestFullscreen();
+			} else if (iframe.webkitRequestFullscreen) {
+				await iframe.webkitRequestFullscreen();
+			} else if (iframe.mozRequestFullScreen) {
+				await iframe.mozRequestFullScreen();
+			} else if (iframe.msRequestFullscreen) {
+				await iframe.msRequestFullscreen();
 			} else {
-					iframe.classList.remove('portrait');
+				return false
 			}
+		} catch {
+			return false
+		}
+
+		return true
 	}
 
-	window.addEventListener('resize', adjustIframeOrientation);
-	window.addEventListener('orientationchange', adjustIframeOrientation);
+	function sleep() {
+		return new Promise((resolve) => {
+			setTimeout(resolve, 500)
+		})
+	}
 
-	// Initial check
-	adjustIframeOrientation();
+
+	function onIframeLoad() {
+		const iframe = document.getElementById('canvan-frame');
+
+
+		iframe.onload = async function () {
+			console.log("starting")
+			let done = false
+			let tries = 0
+			do {
+				tries++
+
+				console.log(tries)
+
+				done = makeIframeFullScreen(iframe)
+
+				await sleep()
+
+			} while (!done && tries < 5)
+
+			if (done) {
+
+				console.log("done")
+			} else {
+				console.error("fail")
+			}
+		};
+	}
+
+	onIframeLoad();
 </script>
+
 </html>
