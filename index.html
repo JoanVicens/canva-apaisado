@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		body, html {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				overflow: hidden;
+		}
+		.iframe-container {
+				position: relative;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+		}
+		iframe {
+				width: 100vw;
+				height: 100vh;
+				border: none;
+		}
+		.portrait {
+				transform: rotate(90deg);
+				transform-origin: center center;
+				width: 100vh;
+				height: 100vw;
+		}
+</style>
+</head>
+<body>
+	<div class="iframe-container">
+		<iframe  id="myIframe" loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+			src="https:&#x2F;&#x2F;www.canva.com&#x2F;design&#x2F;DAGLy70P3p4&#x2F;qxfbcRXlwo_y9irrrqoo8w&#x2F;view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+		</iframe>
+	</div>
+</body>
+<script>
+	function adjustIframeOrientation() {
+			const iframe = document.getElementById('myIframe');
+			if (window.innerHeight > window.innerWidth) {
+					iframe.classList.add('portrait');
+			} else {
+					iframe.classList.remove('portrait');
+			}
+	}
+
+	window.addEventListener('resize', adjustIframeOrientation);
+	window.addEventListener('orientationchange', adjustIframeOrientation);
+
+	// Initial check
+	adjustIframeOrientation();
+</script>
+</html>
